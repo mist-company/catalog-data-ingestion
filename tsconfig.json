@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node-lts/tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleDetection": "force",
+    "outDir": "dist",
+    "strict": false,
+    "sourceMap": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
