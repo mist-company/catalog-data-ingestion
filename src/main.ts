@@ -49,6 +49,7 @@ const importDatasetService = new ImportDatasetService();
       connection: { url: process.env.REDIS_URL },
     },
   );
+  logger.info(`worker started successfully - waiting for jobs - concurrency:${RAW_DATA_INGESTION_QUEUE_CONCURRENCY}`);
   await worker
     .on('failed', (job: Job, err: Error) => logger.error(job.data, `job ${job.name} failed: ${err.message}`))
     .run();
