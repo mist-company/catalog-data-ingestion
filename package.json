@@ -5,6 +5,8 @@
   "scripts": {
     "start:dev": "nodemon -r dotenv/config --exec ts-node src/main.ts",
     "build": "tsc",
+    "lint": "eslint . --ext .ts",
+    "lint:fix": "eslint . --ext .ts --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -19,14 +21,18 @@
     "pino": "^9.6.0"
   },
   "devDependencies": {
+    "@eslint/js": "^9.22.0",
     "@tsconfig/node-lts": "^22.0.1",
     "@types/node": "^22.13.4",
     "@types/pg": "^8.11.11",
     "@types/pg-copy-streams": "^1.2.5",
     "dotenv": "^16.4.7",
+    "eslint": "^9.22.0",
+    "globals": "^16.0.0",
     "nodemon": "^3.1.9",
     "pino-pretty": "^13.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.26.1"
   }
 }

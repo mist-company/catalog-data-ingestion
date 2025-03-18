@@ -7,7 +7,6 @@ import fs from 'node:fs';
 import zlib from 'node:zlib';
 import * as fastCSV from 'fast-csv';
 import { IMPORT_DATASET_JOB_NAME, queue } from '../util/queue';
-import { Queue } from 'bullmq';
 
 export type DownloadDatasetServiceInput = {
   datasetName: string;
