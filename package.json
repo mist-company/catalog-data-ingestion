@@ -1,5 +1,5 @@
 {
-  "name": "raw-data-ingestion",
+  "name": "catalog-data-ingestion",
   "version": "0.1.0",
   "main": "dist/main.ts",
   "scripts": {

@@ -20,7 +20,7 @@ export type DownloadDatasetServiceOutput = {
 
 export class DownloadDatasetService {
   private readonly logger = pino({
-    name: 'raw-data-ingestion:download-dataset-service',
+    name: 'catalog-data-ingestion:download-dataset-service',
     level: process.env.LOG_LEVEL || 'info',
   });
 

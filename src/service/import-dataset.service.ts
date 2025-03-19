@@ -13,7 +13,7 @@ export type ImportDatasetServiceInput = {
 export class ImportDatasetService {
   private readonly pg = new pg.Pool({ connectionString: process.env.POSTGRES_URL });
   private readonly logger = pino({
-    name: 'raw-data-ingestion:import-dataset-service',
+    name: 'catalog-data-ingestion:import-dataset-service',
     level: process.env.LOG_LEVEL || 'info',
   });
 
