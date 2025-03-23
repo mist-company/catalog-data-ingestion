@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "dist/main.ts",
   "scripts": {
-    "start:dev": "nodemon -r dotenv/config --exec ts-node src/main.ts",
+    "start:dev": "nodemon -r dotenv/config --exec ts-node src/main.ts | pino-pretty",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
