@@ -5,31 +5,32 @@ import os from 'node:os';
 import fs from 'node:fs';
 import zlib from 'node:zlib';
 import * as fastCSV from 'fast-csv';
-import { CLEANUP_FILES_JOB_NAME, IMPORT_DATASET_JOB_NAME } from '../config';
-import { queue } from '../util/queue';
-import { logger } from '../util/logger';
-import { BaseService } from './base.sevice';
+import { Logger } from 'pino';
 
 export type DownloadDatasetServiceInput = {
   dataset: string;
 };
 
-export class DownloadDatasetService implements BaseService<DownloadDatasetServiceInput, void> {
-  private readonly logger = logger.child({ name: DownloadDatasetService.name });
+export type DownloadDatasetServiceOutput = {
+  zipFilePath: string;
+  csvFilePath: string;
+};
 
-  async execute(input: DownloadDatasetServiceInput): Promise<void> {
+export class DownloadDatasetService {
+  private readonly logger: Logger;
+
+  constructor(props: { logger: Logger }) {
+    this.logger = props.logger.child({ service: DownloadDatasetService.name });
+  }
+
+  async execute(input: DownloadDatasetServiceInput): Promise<DownloadDatasetServiceOutput> {
     const dataset = DATASETS.find((dataset) => dataset.name === input.dataset);
     const zipFileUrl = new URL(`https://datasets.imdbws.com/${dataset.file}`);
     const zipFilePath = `${os.tmpdir()}/${dataset.file}`;
     const csvFilePath = zipFilePath.replace('.gz', '');
     await this.downloadFile(zipFileUrl, zipFilePath);
     await this.extractFile(zipFilePath, csvFilePath);
-    await queue.add(
-      IMPORT_DATASET_JOB_NAME,
-      { dataset: dataset.name, file: csvFilePath },
-      { deduplication: { id: `download:${dataset.name}` } },
-    );
-    await queue.add(CLEANUP_FILES_JOB_NAME, { files: [zipFilePath] });
+    return { zipFilePath, csvFilePath };
   }
 
   private async downloadFile(fileUrl: URL, filePath: string): Promise<void> {

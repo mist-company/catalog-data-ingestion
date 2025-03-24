@@ -1,13 +1,16 @@
 import fs from 'node:fs';
-import { logger } from '../util/logger';
-import { BaseService } from './base.sevice';
+import { Logger } from 'pino';
 
 export type CleanupFilesServiceInput = {
   files: string[];
 };
 
-export class CleanupFilesService implements BaseService<CleanupFilesServiceInput, void> {
-  private readonly logger = logger.child({ name: CleanupFilesService.name });
+export class CleanupFilesService {
+  private readonly logger: Logger;
+
+  constructor(props: { logger: Logger }) {
+    this.logger = props.logger.child({ service: CleanupFilesService.name });
+  }
 
   async execute(input: CleanupFilesServiceInput): Promise<void> {
     await Promise.all(

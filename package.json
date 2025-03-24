@@ -14,7 +14,6 @@
   "description": "",
   "dependencies": {
     "axios": "^1.8.3",
-    "bullmq": "^5.43.1",
     "fast-csv": "^5.0.2",
     "pg": "^8.13.3",
     "pg-copy-streams": "^6.0.6",
