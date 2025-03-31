@@ -1,37 +1,33 @@
 export type Dataset = {
-  name: string;
   file: string;
-  columns: string[];
-  indexes: string[];
+  collection: string;
+  transform: (row: any) => any;
 };
 
-export const DATASETS: Dataset[] = [
+export const datasets: Dataset[] = [
   {
-    name: 'title_ratings',
-    file: 'title.ratings.tsv.gz',
-    columns: ['tconst TEXT PRIMARY KEY', 'average_rating FLOAT', 'num_votes INT'],
-    indexes: ['average_rating', 'num_votes'],
-  },
-  {
-    name: 'title_episode',
-    file: 'title.episode.tsv.gz',
-    columns: ['tconst TEXT PRIMARY KEY', 'parent_tconst TEXT', 'season_number INT', 'episode_number INT'],
-    indexes: ['parent_tconst', 'season_number', 'episode_number'],
-  },
-  {
-    name: 'title_basics',
     file: 'title.basics.tsv.gz',
-    columns: [
-      'tconst TEXT PRIMARY KEY',
-      'title_type TEXT',
-      'primary_title TEXT',
-      'original_title TEXT',
-      'is_adult BOOLEAN',
-      'start_year INT',
-      'end_year INT',
-      'runtime_minutes INT',
-      'genres TEXT',
-    ],
-    indexes: ['title_type', 'start_year', 'genres'],
+    collection: 'titles',
+    transform: (row) => ({
+      _id: row.tconst,
+      titleType: row.titleType,
+      primaryTitle: row.primaryTitle,
+      originalTitle: row.originalTitle,
+      isAdult: row.isAdult === '1',
+      startYear: row.startYear ? parseInt(row.startYear, 10) : null,
+      endYear: row.endYear ? parseInt(row.endYear, 10) : null,
+      runtimeMinutes: row.runtimeMinutes ? parseInt(row.runtimeMinutes, 10) : null,
+      genres: row.genres ? row.genres.split(',') : [],
+    }),
+  },
+  {
+    file: 'title.episode.tsv.gz',
+    collection: 'episodes',
+    transform: (row) => ({
+      _id: row.tconst,
+      parentId: row.parentTconst,
+      seasonNumber: row.seasonNumber ? parseInt(row.seasonNumber, 10) : null,
+      episodeNumber: row.episodeNumber ? parseInt(row.episodeNumber, 10) : null,
+    }),
   },
 ];

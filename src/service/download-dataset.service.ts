@@ -1,14 +1,14 @@
-import { DATASETS } from '../util/datasets';
 import { pipeline } from 'node:stream/promises';
 import axios from 'axios';
 import os from 'node:os';
 import fs from 'node:fs';
 import zlib from 'node:zlib';
-import * as fastCSV from 'fast-csv';
+
 import { Logger } from 'pino';
+import { Dataset } from '../util/datasets';
 
 export type DownloadDatasetServiceInput = {
-  dataset: string;
+  dataset: Dataset;
 };
 
 export type DownloadDatasetServiceOutput = {
@@ -24,9 +24,8 @@ export class DownloadDatasetService {
   }
 
   async execute(input: DownloadDatasetServiceInput): Promise<DownloadDatasetServiceOutput> {
-    const dataset = DATASETS.find((dataset) => dataset.name === input.dataset);
-    const zipFileUrl = new URL(`https://datasets.imdbws.com/${dataset.file}`);
-    const zipFilePath = `${os.tmpdir()}/${dataset.file}`;
+    const zipFileUrl = new URL(`https://datasets.imdbws.com/${input.dataset.file}`);
+    const zipFilePath = `${os.tmpdir()}/${input.dataset.file}`;
     const csvFilePath = zipFilePath.replace('.gz', '');
     await this.downloadFile(zipFileUrl, zipFilePath);
     await this.extractFile(zipFilePath, csvFilePath);
@@ -45,8 +44,6 @@ export class DownloadDatasetService {
     await pipeline(
       fs.createReadStream(zipFilePath),
       zlib.createUnzip(),
-      fastCSV.parse({ delimiter: '\t', quote: null, headers: true, ignoreEmpty: true }),
-      fastCSV.format({ delimiter: '\t' }),
       fs.createWriteStream(csvFilePath, { flags: 'w' }),
     );
     this.logger.info({ zipFilePath, csvFilePath }, 'file extracted');
