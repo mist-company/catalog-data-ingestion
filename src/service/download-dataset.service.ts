@@ -27,8 +27,12 @@ export class DownloadDatasetService {
     const zipFileUrl = new URL(`https://datasets.imdbws.com/${input.dataset.file}`);
     const zipFilePath = `${os.tmpdir()}/${input.dataset.file}`;
     const csvFilePath = zipFilePath.replace('.gz', '');
-    await this.downloadFile(zipFileUrl, zipFilePath);
-    await this.extractFile(zipFilePath, csvFilePath);
+    if (!fs.existsSync(zipFilePath)) {
+      await this.downloadFile(zipFileUrl, zipFilePath);
+    }
+    if (!fs.existsSync(csvFilePath)) {
+      await this.extractFile(zipFilePath, csvFilePath);
+    }
     return { zipFilePath, csvFilePath };
   }
 
